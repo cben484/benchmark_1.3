@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
   float const Dlatency{DelapsedTime};
   // 计算TFLOPS
   float const Dtflops{(one_three * INPUTN * INPUTN * INPUTN) /
-                      (Dlatency * 1e-3f) / 1e6f};
+                      ((Dlatency * 1e-3f) * 1e12f)};
   std::cout << "*************************************************" << std::endl;
   // 输出TFLOPS
   std::cout << "双精度Cholesky分解的TFLOPS: " << Dtflops << " TFLOPS"
@@ -305,7 +305,7 @@ int main(int argc, char *argv[]) {
   float const Slatency{SelapsedTime};
   // 计算TFLOPS
   float const Stflops{(one_three * INPUTN * INPUTN * INPUTN) /
-                      (Slatency * 1e-3f) / 1e6f};
+                      ((Slatency * 1e-3f) * 1e12f)};
   std::cout << "*************************************************" << std::endl;
 
   std::cout << "开始 " << argv[1] << " " << "x" << " " << argv[1]
@@ -461,7 +461,7 @@ int validate_ss_D(cublasHandle_t handle, double const *matrix, double *result,
   double *fenzi;
   CHECK_Runtime(cudaMalloc((void **)&(fenzi), sizeof(double) * N * N));
   CHECK_Runtime(cudaMemcpy(fenzi, lookthetemporigin, sizeof(double) * N * N,
-                           cudaMemcpyHostToHost));
+                           cudaMemcpyHostToDevice));
   // 用Dnrm2算分子的L2范数
   CHECK_Cublas(cublasDnrm2(handle, N * N, fenzi, 1, &nresult));
   std::cout << std::fixed << std::setprecision(20);
@@ -578,7 +578,7 @@ int validate_ss_S(cublasHandle_t handle, float const *matrix, float *result,
   float *fenzi;
   CHECK_Runtime(cudaMalloc((void **)&(fenzi), sizeof(float) * N * N));
   CHECK_Runtime(cudaMemcpy(fenzi, lookthetemporigin, sizeof(float) * N * N,
-                           cudaMemcpyHostToHost));
+                           cudaMemcpyHostToDevice));
 
   // 用Dnrm2算分子的L2范数
   CHECK_Cublas(cublasSnrm2(handle, N * N, fenzi, 1, &nresult));
