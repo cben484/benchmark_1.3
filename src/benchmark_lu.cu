@@ -92,6 +92,13 @@ int main(int argc, char *argv[]) {
                                   SWorkspace, SdevIpiv, SdevInfo));
   CHECK_Runtime(cudaEventRecord(stop));
   CHECK_Runtime(cudaEventSynchronize(stop));
+  // 检查SdevInfo
+  int *host_SdevInfo = NULL;
+  host_SdevInfo = (int *)malloc(sizeof(int));
+  CHECK_Runtime(
+      cudaMemcpy(host_SdevInfo, SdevInfo, sizeof(int), cudaMemcpyDeviceToHost));
+  std::cout << "检查SdevInfo " << *host_SdevInfo << std::endl;
+
   // 作差求elapse
   float SelapsedTime;
   CHECK_Runtime(cudaEventElapsedTime(&SelapsedTime, start, stop));
